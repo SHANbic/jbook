@@ -10,33 +10,45 @@ const CodeCell = () => {
   const [code, setCode] = useState("");
   const [err, setErr] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundle(input);
       setCode(output.code);
-      setErr(output.err)
-    }, 800)
+      setErr(output.err);
+    }, 800);
 
     return () => {
-      clearTimeout(timer)
-    }
-  }, [input])
+      clearTimeout(timer);
+    };
+  }, [input]);
+
+  const initialValue = `import React from "react";
+import ReactDOM from "react-dom";
+
+const App = () => {
+  return (
+      <>
+        <h1>Hello World!</h1>
+      </>
+    )
+}
+ReactDOM.render(<App />, document.querySelector("#root"));
+  `;
 
   return (
-      <Resizable direction="vertical">
-    <div style={{ height: "100%", display: "flex", flexDirection: "row" }}>
-      <Resizable direction="horizontal">
-        <CodeEditor
-        initialValue={"const a = 1"}
-        onChange={(value) => {
-          setInput(value);
-        }}
-      />
-      </Resizable>
-      <div>
+    <Resizable direction="vertical">
+      <div style={{ height: "100%", display: "flex", flexDirection: "row" }}>
+        <Resizable direction="horizontal">
+          <CodeEditor
+            initialValue={initialValue}
+            onChange={(value) => {
+              setInput(value);
+            }}
+          />
+        </Resizable>
+        <div></div>
+        <Preview code={code} err={err} />
       </div>
-      <Preview code={code} err={err}/>
-    </div>
     </Resizable>
   );
 };
